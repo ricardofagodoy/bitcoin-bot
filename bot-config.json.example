@@ -1,0 +1,19 @@
+{
+  "api": "mercadobitcoin",
+  "strategy": "simple",
+
+  "apis": {
+    "mercadobitcoin": {
+      "currency": "BTC",
+      "key": ????
+      "secret": ????
+      "pin": ????
+    }
+  },
+
+  "strategies": {
+    "simple": {
+      "interval": 5000
+    }
+  }
+}

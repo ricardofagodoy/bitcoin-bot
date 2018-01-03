@@ -1,0 +1,50 @@
+{
+  "name": "bitcoin-bot",
+  "version": "1.0.0",
+  "description": "bitcoin bot",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsc && node dist",
+    "test": "jest --forceExit"
+  },
+  "jest": {
+    "globals": {
+      "ts-jest": {
+        "tsConfigFile": "tsconfig.json"
+      }
+    },
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
+    "transform": {
+      "^.+\\.(ts|tsx)$": "./node_modules/ts-jest/preprocessor.js"
+    },
+    "testMatch": [
+      "**/test/**/*.test.(ts|js)"
+    ],
+    "testEnvironment": "node"
+  },
+  "keywords": [
+    "bitcoin",
+    "bot"
+  ],
+  "author": "Ricardofagodoy",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv-safe": "^4.0.4",
+    "moment": "^2.20.1",
+    "querystring": "^0.2.0",
+    "tslint": "^5.8.0",
+    "unirest": "^0.5.1",
+    "winston": "^2.4.0",
+    "winston-daily-rotate-file": "^1.7.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^22.0.0",
+    "@types/node": "^8.5.2",
+    "jest": "^22.0.4",
+    "ts-jest": "^22.0.0",
+    "typescript": "^2.6.2"
+  }
+}
