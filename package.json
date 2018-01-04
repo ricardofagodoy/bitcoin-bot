@@ -4,7 +4,7 @@
   "description": "bitcoin bot",
   "main": "index.js",
   "scripts": {
-    "start": "tsc && node dist",
+    "start": "npm test && ./node_modules/typescript/bin/tsc && node dist",
     "test": "jest --forceExit"
   },
   "jest": {

@@ -70,7 +70,9 @@ class MercadoBitcoin implements Api {
             const balances = json.balance
             const data: Balance[] = []
 
-            for (let key in Object.keys(balances)) {
+            let key = undefined
+
+            for (key in balances) {
                 data.push({
                     currency: key,
                     available: balances[key].available,
@@ -123,11 +125,8 @@ class MercadoBitcoin implements Api {
             .headers("Accept", "application/json")
             .end(response => {
                 try {
-
-                    const jsonResponse = JSON.parse(response.raw_body)
-
-                    logger.info(`${TAG} API method '${method}' returned\n${jsonResponse}`)
-                    success(jsonResponse);
+                    logger.info(`${TAG} API method '${method}' returned\n${response.raw_body}`)
+                    success(JSON.parse(response.raw_body));
 
                 } catch (ex) {
                     logger.error(`${TAG} API method '${method}' failed\n${ex}`)
@@ -137,7 +136,7 @@ class MercadoBitcoin implements Api {
 
     private callSecure(method: string, parameters, success: Function, error: Function): void {
 
-        logger.info(`${TAG} Calling secure API method '${method}' with parameters ${parameters}`)
+        logger.info(`${TAG} Calling secure API method '${method}' with parameters ${JSON.stringify(parameters)}`)
 
         const now = Math.round(new Date().getTime() / 1000);
         const queryString = qs.stringify({
@@ -153,17 +152,17 @@ class MercadoBitcoin implements Api {
             .headers({ "TAPI-MAC": signature })
             .send(queryString)
             .end(response => {
-                if (response.body) {
-                    // Sucess is code 100
+                if (response.statusCode < 400) {
+                    // Internal sucess code is code 100
                     if (response.body.status_code === 100) {
-                        logger.info(`${TAG} API method '${method}' returned\n${response.body.response_data}`)
+                        logger.info(`${TAG} API method '${method}' returned\n${JSON.stringify(response.body.response_data)}`)
                         success(response.body.response_data);
                     } else {
-                        logger.error(`${TAG} API method '${method}' failed\n${response.body.error_message}`)
-                        error(response.body.error_message);
+                        logger.error(`${TAG} API method '${method}' failed\n${response.body.status_code}: ${response.body.error_message}`)
+                        error(response)
                     }
                 } else
-                    logger.error(`${TAG} API method '${method}' received unexpected error`);
+                    logger.error(`${TAG} API method '${method}' received unexpected error: ${response.statusCode}`);
             });
     }
 
