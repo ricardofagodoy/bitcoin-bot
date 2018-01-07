@@ -4,8 +4,9 @@
   "description": "bitcoin bot",
   "main": "index.js",
   "scripts": {
-    "start": "npm test && ./node_modules/typescript/bin/tsc && node dist",
-    "test": "jest --forceExit"
+    "build": "./node_modules/typescript/bin/tsc && npm test",
+    "start": "node dist",
+    "test": "jest --forceExit dist"
   },
   "jest": {
     "globals": {
@@ -35,7 +36,6 @@
     "dotenv-safe": "^4.0.4",
     "moment": "^2.20.1",
     "querystring": "^0.2.0",
-    "tslint": "^5.8.0",
     "unirest": "^0.5.1",
     "winston": "^2.4.0",
     "winston-daily-rotate-file": "^1.7.2"
@@ -45,6 +45,7 @@
     "@types/node": "^8.5.2",
     "jest": "^22.0.4",
     "ts-jest": "^22.0.0",
+    "tslint": "^5.8.0",
     "typescript": "^2.6.2"
   }
 }

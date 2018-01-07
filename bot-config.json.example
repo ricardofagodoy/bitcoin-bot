@@ -5,15 +5,16 @@
   "apis": {
     "mercadobitcoin": {
       "currency": "BTC",
-      "key": ????
-      "secret": ????
+      "key": "???"
+      "secret": "???"
       "pin": ????
     }
   },
 
   "strategies": {
     "simple": {
-      "interval": 5000
+      "interval": 5000,
+      "profitability": 1.10
     }
   }
 }

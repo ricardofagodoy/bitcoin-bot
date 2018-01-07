@@ -1,5 +1,6 @@
 import { Strategy } from "strategy/Strategy";
 import { Api } from "apis/Api";
+import { Tick } from "types/api/types"
 import { logger } from "../../logger/basic"
 
 const TAG = "[Strategy Simple]"
@@ -18,26 +19,17 @@ class SimpleStrategy implements Strategy {
 
         logger.info(`${TAG} Started - ${this.config.interval} ms interval`)
 
-        setInterval(() =>
+        setInterval(() => {
             this.api.ticker((tick) => {
-                logger.info(`${TAG} ${this.api.getCurrency()} price now: ${tick.last}`)
-            }), this.config.interval) 
+                logger.info(`${TAG} ${this.api.getCurrency()} last price: ${tick.last}`)
+                this.takeActionOnPrice(tick)
+            }, (error) => console.log(error))
 
-            // TODO: implement logic
-            
-            /*if (response.ticker.sell <= 50000) {
-                    getQuantity('BRL', response.ticker.sell, true, (qty) => {
-                        tradeApi.placeBuyOrder(qty, response.ticker.sell,
-                            (data) => {
-                                console.log('Ordem de compra inserida no livro. ' + data)
-                                //operando em STOP
-                                tradeApi.placeSellOrder(data.quantity, response.ticker.sell * parseFloat(process.env.PROFITABILITY),
-                                    (data) => console.log('Ordem de venda inserida no livro. ' + data),
-                                    (data) => console.log('Erro ao inserir ordem de venda no livro. ' + data))
-                            },
-                            (data) => console.log('Erro ao inserir ordem de compra no livro. ' + data))
-                    })
-                }*/
+        }, this.config.interval)
+    }
+
+    private takeActionOnPrice(price: Tick): void {
+        console.log(`Logic over price ${price.sell} with ${this.config.profitability} profitability!`)
     }
 }
 
