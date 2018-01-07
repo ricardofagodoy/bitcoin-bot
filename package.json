@@ -6,7 +6,7 @@
   "scripts": {
     "build": "./node_modules/typescript/bin/tsc && npm test",
     "start": "node dist",
-    "test": "jest --forceExit dist"
+    "test": "jest --forceExit src"
   },
   "jest": {
     "globals": {

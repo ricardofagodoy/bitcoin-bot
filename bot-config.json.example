@@ -13,8 +13,10 @@
 
   "strategies": {
     "simple": {
+      "baseCurrency": "BRL",
       "interval": 5000,
-      "profitability": 1.10
+      "profitability": 1.10,
+      "closeToLowest": 0.05
     }
   }
 }

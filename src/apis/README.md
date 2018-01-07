@@ -15,7 +15,7 @@ Check out available exchanges API and their configuration bellow:
 
 ```
 "mercadobitcoin": {
-    "currency": "??", // "BTC", "LTC" |or"BCH" supported
+    "currency": "??", // "BTC", "LTC" or "BCH" supported
     "key": "??", // Your exchange API Key
     "secret": "??", // Your exchange API Secret
     "pin": // Exchange Account PIN
@@ -24,4 +24,4 @@ Check out available exchanges API and their configuration bellow:
 
 ***
 
-If you wanna create your own strategy, it's super easy (read about it at default README)
+If you want to create your own strategy, read about it at default README
