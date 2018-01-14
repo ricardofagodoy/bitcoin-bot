@@ -1,0 +1,1 @@
+{"version":3,"file":"mapper.test.js","sourceRoot":"","sources":["../../../../src/test/api/mercadobitcoin/mapper.test.ts"],"names":[],"mappings":";;AAAA,gEAA4D;AAE5D,MAAM,MAAM,GAAG,IAAI,eAAM,EAAE,CAAA;AAE3B,QAAQ,CAAC,sBAAsB,EAAE,GAAG,EAAE;IAElC,EAAE,CAAC,EAAE,EAAE,GAAG,EAAE;QACR,MAAM,CAAC,MAAM,CAAC,CAAC,IAAI,CAAC,MAAM,CAAC,CAAC;IAChC,CAAC,CAAC,CAAC;AACP,CAAC,CAAC,CAAA"}

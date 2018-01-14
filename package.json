@@ -34,6 +34,7 @@
   "license": "ISC",
   "dependencies": {
     "dotenv-safe": "^4.0.4",
+    "load-json-file": "^4.0.0",
     "moment": "^2.20.1",
     "querystring": "^0.2.0",
     "unirest": "^0.5.1",

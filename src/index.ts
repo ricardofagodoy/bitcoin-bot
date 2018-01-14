@@ -1,35 +1,12 @@
-import { Api } from "apis/Api"
-import { Strategy } from "strategy/Strategy"
-import { logger } from "./logger/basic"
-import * as fs from "fs"
+import { Loader } from "./loader"
 
-const CONFIG_FILE = "bot-config.json"
+const loader = new Loader("bot-config.json")
 
-/* 
- * Load properties 
- */
-const config = JSON.parse(fs.readFileSync(CONFIG_FILE, "utf8"))
+/*  Load API chosen in configuration  */
+const api = loader.loadApi()
 
-logger.info(`API Exchange chosen: ${config.api}`)
-logger.info(`Strategy chosen: ${config.strategy}\n`)
+/*  Load Strategy chosen in configuration  */
+const strategy = loader.loadStrategy(api)
 
-/**
- * Load API chosen in configuration
- */
-const chosenApi = require("./apis/" + config.api + "/api").Api
-const apiConfig = config["apis"][config.api]
-
-const api: Api = new chosenApi(apiConfig);
-
-/**
- * Load Strategy chosen in configuration
- */
-const chosenStrategy = require("./strategy/" + config.strategy + "/strategy").Strategy
-const strategyConfig = config["strategies"][config.strategy]
-
-const strategy: Strategy = new chosenStrategy(api, strategyConfig)
-
-/**
- * Starts strategy and here you go!
- */
+/*  Starts strategy and here you go!  */
 strategy.start()

@@ -21,5 +21,4 @@ export interface Api {
 
     /* Util */
     getCurrency(): string;
-    setCurrency(currency: string): void;
 }

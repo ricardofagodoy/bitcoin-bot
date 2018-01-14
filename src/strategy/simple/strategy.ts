@@ -1,6 +1,6 @@
 import { Strategy } from "strategy/Strategy";
 import { Api } from "apis/Api";
-import { Tick } from "types/api/types"
+import { Tick, Balance } from "types/api/types"
 import { logger } from "../../logger/basic"
 
 const TAG = "[Strategy Simple]"
@@ -13,11 +13,14 @@ class SimpleStrategy implements Strategy {
     constructor(api: Api, config: any) {
         this.api = api;
         this.config = config;
+
+        logger.info(`${TAG} created with following configuration:\n${JSON.stringify(this.config, undefined, 4)}`)
+
     }
 
     start(): void {
 
-        logger.info(`${TAG} Started - ${this.config.interval} ms interval`)
+        logger.info(`${TAG} Started (${this.config.interval} ms interval)`)
 
         setInterval(() => {
             this.api.ticker((tick) => {
@@ -28,37 +31,29 @@ class SimpleStrategy implements Strategy {
         }, this.config.interval)
     }
 
-    private takeActionOnPrice(price: Tick): void {
+    private async takeActionOnPrice(price: Tick) {
 
         logger.info(`Taking action on latest price...`)
 
-        const shouldBuy = (price.sell - price.low) < price.low * this.config.closeToLowest
+        if (!this.shouldBuy(price))
+            return logger.info(`Price is not low enough to buy: Sell: ${price.sell} | Min: ${price.low}`)
 
-        if (shouldBuy) {
-
-            this.api.accountBalance((currencies) => {
-
-                const correctCurrency = currencies.filter(c => {
-                    return c.currency.toUpperCase() == this.config.baseCurrency.toUpperCase()
-                })[0]
-
-                if (!correctCurrency)
-                    return logger.error(`Base currency ${this.config.baseCurrency} check balance not available`)
-
-                const amountBuy = correctCurrency.available / (price.sell)
-                this.placeBuyAndSellOrders(price.sell, amountBuy, this.config.profitability)
-
-            }, (error) => logger.error(`Fail to retrieve balance: ${error}\nOrder NOT placed!`))
-            
-        } else {
-            logger.info(`Price is not low enough to buy: Sell: ${price.sell} | Min: ${price.low}`)
+        try {
+            const currency = await this.getBalance()
+            this.placeBuyAndSellOrders(price.sell, currency.available / price.sell, this.config.profitability)
+        } catch (e) {
+            logger.error(e)
         }
     }
 
+    private shouldBuy(price: Tick): boolean {
+        return (price.sell - price.low) < price.low * this.config.closeToLowest
+    }
+
     private placeBuyAndSellOrders(price: number, amount: number, profitability: number): void {
-        
+
         logger.info(`About to buy ${amount} ${this.api.getCurrency()} for ${price} ${this.config.baseCurrency} ...`)
-    
+
         this.api.placeBuyOrder(amount, price, (data) => {
 
             logger.info(`Buy order placed successfuly! (${data})`)
@@ -67,11 +62,28 @@ class SimpleStrategy implements Strategy {
             logger.info(`About to place sell order of ${data.quantity} ${data.currency} for ${sellValue} ${this.config.baseCurrency} ...`)
 
             this.api.placeSellOrder(data.quantity, sellValue, (data) => {
-
                 logger.info(`Sell order placed successfuly! (${data})`)
-
             }, (error) => logger.error(`Fail to place sell order: ${error}`))
         }, (error) => logger.error(`Fail to place buy order: ${error}`))
+    }
+
+    private async getBalance(): Promise<Balance> {
+
+        return new Promise<Balance>((resolve, reject) => {
+            this.api.accountBalance((currencies) => {
+
+                const correctCurrency = currencies.filter(c => {
+                    return c.currency.toUpperCase() == this.config.baseCurrency.toUpperCase()
+                })[0]
+
+                if (!correctCurrency)
+                    reject(new Error(`Base currency ${this.config.baseCurrency} check balance not available`))
+
+                correctCurrency.available = 10
+                resolve(correctCurrency)
+
+            }, (error) => reject(new Error(`Fail to retrieve balance: ${error}\nOrder NOT placed!`)))
+        })
     }
 }
 
